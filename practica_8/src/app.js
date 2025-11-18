@@ -7,9 +7,7 @@ app.use(express.json());
 
 
 // Route configuration
-// Example:
-// const apiRoutes = require('./routes/api.routes');
-// app.use('/api', apiRoutes);
+app.use('api', require('./routes/api.routes'));
 
 // 404 handler
 app.use((req, res, next) => {
