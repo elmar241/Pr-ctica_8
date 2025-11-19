@@ -7,14 +7,16 @@ const getAllPosts = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 const createPost = async (req, res, next) => {
     try {
         const { titulo, descripcion, fecha_creacion, categoria, autor_id } = req.body;
 
         if (!titulo || !descripcion || !fecha_creacion || !categoria || !autor_id) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res
+                .status(400)
+                .json({ message: "All fields are required" });
         }
 
         const result = await PostModel.create({
@@ -22,24 +24,21 @@ const createPost = async (req, res, next) => {
             descripcion,
             fecha_creacion,
             categoria,
-            autor_id
+            autor_id,
         });
 
         res.status(201).json({
             message: "Post created successfully",
             insertId: result.insertId
         });
-
     } catch (error) {
         next(error);
     }
-}
+};
 
 const getPostById = async (req, res, next) => {
     try {
-        const { id } = req.params;
-
-        const post = await PostModel.getById(id);
+        const post = await PostModel.getById(req.params.id);
 
         if (!post) {
             return res.status(404).json({ message: "Post not found" });
@@ -49,7 +48,6 @@ const getPostById = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-}
+};
 
 module.exports = { getAllPosts, createPost, getPostById };
-
