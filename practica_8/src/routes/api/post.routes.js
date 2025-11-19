@@ -1,12 +1,13 @@
-const router = require('express').Router();
-const { getAll, create, getById, update, remove } = require('../../controllers/controllers/post.controller');
+const router = require("express").Router();
+const postController = require("../../controllers/post.controller");
 
-// Define your routes here
+// GET Posts con datos completos del autor
+router.get("/", postController.getAllPosts);
 
-router.get('/', getAll);
-router.get('/:postId', getById),
-router.post('/', create)
-router.put('/portId', update)
-router.put('/:postId', remove)
+// POST crear un nuevo post
+router.post("/", postController.createPost);
+
+// GET post por ID (incluyendo datos del autor)
+router.get("/:id", postController.getPostById);
 
 module.exports = router;
