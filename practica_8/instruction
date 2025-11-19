@@ -1,0 +1,59 @@
+### Intrucciones para usar la API:
+
+Base URL: http://localhost:3000/api
+
+### ENDPOINTS DE AUTHORS:
+
+| Método | Ruta | Descripción |
+| GET | /authors | Obtener todos los autores |
+| GET | /authors/:id | Obtener autor por ID |
+| POST | /authors | Crear un nuevo autor (campos obligatorios: nombre, email, imagen) |
+| GET | /authors/:id/posts | Posts de un autor |
+| GET | /authors/:id/posts/count | Posts + total + datos del autor |
+
+### CAMPOS OBLIGATORIOS PARA CREAR UN AUTOR:
+
+nombre: string
+email: string
+imagen: stirng
+
+### EJEMPLO DE RESPUESTA (POST/authors):
+
+{
+"message": "Author created successfully",
+"author": {
+"id": 5,
+"nombre": "pepe",
+"email":"pepe@example.com",
+"imagen": "https://picsum.photos/200"
+}
+}
+
+### ENDPOINTS DE POSTS:
+
+| Método | Ruta | Descripción |
+| GET | /posts | Obtener todos los posts |
+| GET | /posts/:id | Obtener un post por ID |
+| POST | /posts | Crear un nuevo post (campos obligatorios: titulo, descripción, fecha_creación, categoria, autor_id ) |
+
+### CAMPOS OBLIGATORIOS PARA CREAR UN POST:
+
+titulo: string
+descripcion: string
+fecha_creacion: date
+categoria: string
+autor_id: number
+
+### EJEMPLO DE RESPUESTA DE (POST/posts):
+
+{
+"message": "Post created successfully",
+"post": {
+"id": 12,
+"titulo": "Nuevo post",
+"descripcion": "Contenido del post",
+"fecha_creacion": "2025-11-19",
+"categoria": "tecnologia",
+"autor_id": 1
+}
+}
