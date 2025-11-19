@@ -48,7 +48,7 @@ POST {{URL}}/posts
 Content-Type: application/json
 
 {
-    "titulo": "Nuevo post de prueba",
+    "titulo": "Nuevo post de prueba 5",
     "descripcion": "Descripción del nuevo post",
     "fecha_creacion": "2025-11-19",
     "categoria": "tecnologia",
