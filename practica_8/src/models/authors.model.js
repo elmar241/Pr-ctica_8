@@ -1,40 +1,53 @@
 const pool = require("../config/db");
 
+// Obtener todos los autores
 const getAll = async () => {
-    const [rows] = await pool.query(`
-        SELECT id, nombre, email, imagen, creado_en
-        FROM autores
-        ORDER BY id DESC
-    `);
+    const [rows] = await pool.query("SELECT * FROM autores");
     return rows;
-}
+};
 
-const create = async ({ nombre, email, imagen }) => {
+// Obtener autor por ID
+const getById = async (id) => {
+    const [rows] = await pool.query(
+        "SELECT * FROM autores WHERE id = ?",
+        [id]
+    );
+    return rows[0];
+};
+
+// Crear un autor
+const create = async ({ nombre, email }) => {
     const [result] = await pool.query(
-        `
-        INSERT INTO autores (nombre, email, imagen)
-        VALUES (?, ?, ?)
-        `,
-        [nombre, email, imagen || null]
+        "INSERT INTO autores (nombre, email) VALUES (?, ?)",
+        [nombre, email]
     );
     return result;
-}
+};
 
+// Obtener todos los posts de un autor
 const getPostsByAuthor = async (authorId) => {
     const [rows] = await pool.query(
-        `
-        SELECT 
-            p.id, p.titulo, p.descripcion, p.fecha_creacion, p.categoria,
-            a.id AS autor_id, a.nombre AS autor_nombre, a.email AS autor_email, a.imagen AS autor_imagen
-        FROM posts p
-        JOIN autores a ON p.autor_id = a.id
-        WHERE a.id = ?
-        ORDER BY p.id DESC
-        `,
+        "SELECT * FROM posts WHERE autor_id = ?",
         [authorId]
     );
     return rows;
-}
+};
 
-module.exports = { getAll, create, getPostsByAuthor };
+// Obtener cantidad de posts de un autor
+const getPostCount = async (authorId) => {
+    const [rows] = await pool.query(
+        `SELECT COUNT(*) AS total
+         FROM posts
+         WHERE autor_id = ?`,
+        [authorId]
+    );
+    return rows[0];
+};
 
+module.exports = {
+    getAll,
+    getById,
+    create,
+    getPostsByAuthor,
+    getPostCount
+};
