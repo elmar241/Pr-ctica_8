@@ -1,49 +1,46 @@
-const pool = require("../config/db");
+const AuthorsModel = require("../models/authors.model");
 
-module.exports = {
-    // Obtener todos los posts con datos del autor
-    getAll: async () => {
-        const [rows] = await pool.query(`
-            SELECT 
-                p.id, p.titulo, p.descripcion, p.fecha_creacion, p.categoria, 
-                a.id AS autor_id, a.nombre AS autor_nombre, a.email AS autor_email, a.imagen AS autor_imagen
-            FROM posts p
-            JOIN autores a ON p.autor_id = a.id
-            ORDER BY p.id DESC
-        `);
-
-        return rows;
-    },
-
-    // Crear un nuevo post
-    create: async (postData) => {
-        const { titulo, descripcion, fecha_creacion, categoria, autor_id } = postData;
-
-        const [result] = await pool.query(
-            `
-            INSERT INTO posts (titulo, descripcion, fecha_creacion, categoria, autor_id)
-            VALUES (?, ?, ?, ?, ?)
-            `,
-            [titulo, descripcion, fecha_creacion, categoria, autor_id]
-        );
-
-        return result;
-    },
-
-    // Obtener un post por ID con datos del autor
-    getById: async (id) => {
-        const [rows] = await pool.query(
-            `
-            SELECT 
-                p.id, p.titulo, p.descripcion, p.fecha_creacion, p.categoria, 
-                a.id AS autor_id, a.nombre AS autor_nombre, a.email AS autor_email, a.imagen AS autor_imagen
-            FROM posts p
-            JOIN autores a ON p.autor_id = a.id
-            WHERE p.id = ?
-            `,
-            [id]
-        );
-
-        return rows[0]; 
+const getAllAuthors = async (req, res, next) => {
+    try {
+        const authors = await AuthorsModel.getAll();
+        res.json(authors);
+    } catch (error) {
+        next(error);
     }
-};
+}
+
+const createAuthor = async (req, res, next) => {
+    try {
+        const { nombre, email, imagen } = req.body;
+
+        if (!nombre || !email) {
+            return res.status(400).json({ message: "Nombre and email are required" });
+        }
+
+        const result = await AuthorsModel.create({
+            nombre,
+            email,
+            imagen: imagen || null
+        });
+
+        res.status(201).json({
+            message: "Author created successfully",
+            insertId: result.insertId
+        });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+const getPostsByAuthor = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const posts = await AuthorsModel.getPostsByAuthor(id);
+        res.json(posts);
+    } catch (error) {
+        next(error);
+    }
+}
+
+module.exports = { getAllAuthors, createAuthor, getPostsByAuthor };

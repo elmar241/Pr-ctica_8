@@ -1,13 +1,10 @@
 const router = require("express").Router();
-const postController = require("../../controllers/post.controller");
+const { getAllPosts, createPost, getPostById } = require("../../controllers/post.controller");
 
-// GET Posts con datos completos del autor
-router.get("/", postController.getAllPosts);
+router.get("/", getAllPosts);
+router.get("/:id", getPostById);
+router.post("/", createPost);
 
-// POST crear un nuevo post
-router.post("/", postController.createPost);
-
-// GET post por ID (incluyendo datos del autor)
-router.get("/:id", postController.getPostById);
 
 module.exports = router;
+
