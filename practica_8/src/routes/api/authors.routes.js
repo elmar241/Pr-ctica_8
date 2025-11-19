@@ -1,12 +1,10 @@
 const router = require("express").Router();
-const AuthorsController = require("../../controllers/authors.controller");
+const AutoresController = require("../../controllers/authors.controller");
 
-router.get("/", AuthorsController.getAllAuthors);
-router.get("/:id", AuthorsController.getAuthorById);
-router.post("/", AuthorsController.createAuthor);
-router.get("/:id/posts", AuthorsController.getPostsByAuthor);
-router.get("/:id/posts/count", AuthorsController.getPostCountByAuthor);
+router.get("/", AutoresController.getAllAutores);
+router.get("/:id", AutoresController.getAutorById);
+router.post("/", AutoresController.createAutor);
+router.get("/:id/posts", AutoresController.getPostsByAutor);
+router.get("/:id/posts/count", AutoresController.getAutorWithPosts);
 
 module.exports = router;
-
-

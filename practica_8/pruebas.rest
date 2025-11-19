@@ -1,15 +1,18 @@
 @URL = http://localhost:3000/api
 
-###
+### authors
 GET {{URL}}/authors
+
+###
+GET {{URL}}/authors/1
 
 ###
 POST {{URL}}/authors
 Content-Type: application/json
 
 {
-    "nombre": "Mario Ruiz",
-    "email": "mario@example.com",
+    "nombre": "pepe",
+    "email": "pepe@example.com",
     "imagen": "https://picsum.photos/200"
 }
 
@@ -25,7 +28,7 @@ Content-Type: application/json
     "nombre": ""
 }
 
-###
+#### post
 
 GET {{URL}}/posts
 
@@ -38,4 +41,16 @@ Content-Type: application/json
 
 {
     "titulo": "Sin datos"
+}
+
+### Crear post correctamente
+POST {{URL}}/posts
+Content-Type: application/json
+
+{
+    "titulo": "Nuevo post de prueba",
+    "descripcion": "Descripción del nuevo post",
+    "fecha_creacion": "2025-11-19",
+    "categoria": "tecnologia",
+    "autor_id": 1
 }

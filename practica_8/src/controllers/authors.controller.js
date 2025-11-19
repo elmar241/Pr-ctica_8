@@ -1,81 +1,88 @@
-const AuthorsModel = require("../models/authors.model");
+const AutoresModel = require("../models/authors.model");
 
 // Obtener todos los autores
-const getAllAuthors = async (req, res, next) => {
+const getAllAutores = async (req, res, next) => {
     try {
-        const authors = await AuthorsModel.getAll();
-        res.json(authors);
+        const autores = await AutoresModel.getAll();
+        res.json(autores);
     } catch (error) {
         next(error);
     }
 };
 
 // Obtener autor por ID
-const getAuthorById = async (req, res, next) => {
+const getAutorById = async (req, res, next) => {
     try {
-        const { id } = req.params;
-        const author = await AuthorsModel.getById(id);
+        const autor = await AutoresModel.getById(req.params.id);
 
-        if (!author) {
-            return res.status(404).json({ message: "Author not found" });
+        if (!autor) {
+            return res.status(404).json({ message: "Autor no encontrado" });
         }
 
-        res.json(author);
+        res.json(autor);
     } catch (error) {
         next(error);
     }
 };
 
 // Crear autor y devolverlo
-const createAuthor = async (req, res, next) => {
+const createAutor = async (req, res, next) => {
     try {
-        const { nombre, email } = req.body;
+        const { nombre, email, imagen } = req.body;
 
         if (!nombre || !email) {
-            return res.status(400).json({
-                message: "Nombre and email are required"
-            });
+            return res
+                .status(400)
+                .json({ message: "Nombre y email son obligatorios" });
         }
 
-        // Crear autor
-        const result = await AuthorsModel.create({ nombre, email });
+        // Crear
+        const result = await AutoresModel.create({ nombre, email, imagen });
 
         // Obtener autor recién creado
-        const newAuthor = await AuthorsModel.getById(result.insertId);
+        const autorNuevo = await AutoresModel.getById(result.insertId);
 
         res.status(201).json({
-            message: "Author created successfully",
-            author: newAuthor
+            message: "Autor creado correctamente",
+            autor: autorNuevo
         });
-
     } catch (error) {
         next(error);
     }
 };
 
-// Obtener todos los posts de un autor
-const getPostsByAuthor = async (req, res, next) => {
+// Obtener posts completos de un autor
+const getPostsByAutor = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const autorId = req.params.id;
 
-        const posts = await AuthorsModel.getPostsByAuthor(id);
+        const autor = await AutoresModel.getById(autorId);
+        if (!autor) return res.status(404).json({ message: "Autor no encontrado" });
 
-        res.json(posts);
+        const posts = await AutoresModel.getPostsByAuthor(autorId);
+
+        res.json({ autor, posts });
     } catch (error) {
         next(error);
     }
 };
 
-// Obtener cantidad de posts de un autor
-const getPostCountByAuthor = async (req, res, next) => {
+// Obtener AUTOR + TODOS sus posts (antes solo devolvía recuento)
+const getAutorWithPosts = async (req, res, next) => {
     try {
-        const { id } = req.params;
+        const autorId = req.params.id;
 
-        const count = await AuthorsModel.getPostCount(id);
+        // 1. Datos del autor
+        const autor = await AutoresModel.getById(autorId);
+        if (!autor) return res.status(404).json({ message: "Autor no encontrado" });
 
+        // 2. Posts completos
+        const posts = await AutoresModel.getPostsByAuthor(autorId);
+
+        // 3. Respuesta completa
         res.json({
-            author_id: id,
-            total_posts: count.total
+            autor,
+            posts
         });
 
     } catch (error) {
@@ -84,9 +91,9 @@ const getPostCountByAuthor = async (req, res, next) => {
 };
 
 module.exports = {
-    getAllAuthors,
-    getAuthorById,
-    createAuthor,
-    getPostsByAuthor,
-    getPostCountByAuthor
+    getAllAutores,
+    getAutorById,
+    createAutor,
+    getPostsByAutor,
+    getAutorWithPosts
 };

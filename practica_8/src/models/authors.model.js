@@ -15,39 +15,28 @@ const getById = async (id) => {
     return rows[0];
 };
 
-// Crear un autor
-const create = async ({ nombre, email }) => {
+// Crear autor
+const create = async ({ nombre, email, imagen }) => {
     const [result] = await pool.query(
-        "INSERT INTO autores (nombre, email) VALUES (?, ?)",
-        [nombre, email]
+        `INSERT INTO autores (nombre, email, imagen)
+         VALUES (?, ?, ?)`,
+        [nombre, email, imagen]
     );
     return result;
 };
 
-// Obtener todos los posts de un autor
-const getPostsByAuthor = async (authorId) => {
+// Obtener posts de un autor
+const getPostsByAuthor = async (id) => {
     const [rows] = await pool.query(
         "SELECT * FROM posts WHERE autor_id = ?",
-        [authorId]
+        [id]
     );
     return rows;
-};
-
-// Obtener cantidad de posts de un autor
-const getPostCount = async (authorId) => {
-    const [rows] = await pool.query(
-        `SELECT COUNT(*) AS total
-         FROM posts
-         WHERE autor_id = ?`,
-        [authorId]
-    );
-    return rows[0];
 };
 
 module.exports = {
     getAll,
     getById,
     create,
-    getPostsByAuthor,
-    getPostCount
+    getPostsByAuthor
 };
